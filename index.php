@@ -1,5 +1,3 @@
-<?php?>
-
 <html>
 <head>
 <style>
@@ -8,6 +6,9 @@
 </head>
 <body>
 <?php
+$countryArray = array('ANDORRA'=>'376','ANGUILLA'=>'1264','AFGHANISTAN'=>'93','Bangladesh'=>'880',
+					  'BAHRAIN'=>'973','BRAZIL'=>'55','GERMANY'=>'49','SPAIN'=>'34','INDIA'=>'91');
+	
 function test_input($data) {
   $data = trim($data);
   $data = stripslashes($data);
@@ -15,8 +16,9 @@ function test_input($data) {
   return $data;
 }
 $nameErr = $fullnameErr = $emailErr = $genderErr = $phoneErr = $passErr = $cpassErr ="";
-$name = $fullname = $email = $gender = $phone = $password = $cpassword = "";
+$name = $fullname = $email = $gender = $phone = $showphone = $password = $cpassword = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+	var_dump($_POST);
 	if (empty($_POST["un"])) {
     $nameErr = "Username is required";
   } else {
@@ -47,7 +49,11 @@ if (empty($_POST["ue"])) {
     $phoneErr = "Phone Number is required";
   } else {
     $phone = test_input($_POST["up"]);
-    if (!preg_match("/^[0-9]{11}$/", $phone)) {
+	$code = test_input($_POST["code"]);
+	$showphone = $phone;
+	$phone = $code.$phone;
+
+    if (!preg_match("/^[0-9]{9}/", $phone)) {
       $phoneErr = "Invalid phone number";
     }
   }
@@ -65,6 +71,7 @@ if (empty($_POST["ue"])) {
     $gender = test_input($_POST["gen"]);
   }
 }
+
 ?>
 <form name="application" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 <table align="center" style="font-size:30px">
@@ -100,7 +107,17 @@ if (empty($_POST["ue"])) {
 		Phone :
 		</td>
 		<td>
-		 <input type ="text" name ="up" value="<?php echo $phone;?>"/>
+		 <select name="code">
+			<?php
+			foreach ($countryArray as $con => $code) {
+				
+			?>
+				<option value="<?php echo $code ?>"> <?php echo  $con."(".$code.")"?> </option>
+			<?php
+			}
+			?>
+		 </select>
+		 <input type ="text" name ="up" value="<?php echo $showphone;?>"/>
 		 <span class="error">* <?php echo $phoneErr;?></span>
 		</td>
 	</tr>
@@ -150,19 +167,19 @@ if (empty($_POST["ue"])) {
 </form>
 <?php
 echo "<h2>Your Input:</h2>";
-echo $name;
+echo "UserName : ".$name;
 echo "<br>";
-echo $fullname;
+echo "FullName : ".$fullname;
 echo "<br>";
-echo $phone;
+echo "Phone : ".$phone;
 echo "<br>";
-echo $email;
+echo "Email : ".$email;
 echo "<br>";
-echo $password;
+echo "Password : ".$password;
 echo "<br>";
-echo $cpassword;
+echo "Confirm Password : ".$cpassword;
 echo "<br>";
-echo $gender;
+echo "Gender : ".$gender;
 ?>
 </body>
 </html>
