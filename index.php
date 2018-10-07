@@ -177,8 +177,6 @@ echo "Email : ".$email;
 echo "<br>";
 echo "Password : ".$password;
 echo "<br>";
-echo "Confirm Password : ".$cpassword;
-echo "<br>";
 echo "Gender : ".$gender;
 ?>
 </body>
